@@ -6,7 +6,7 @@ const jwksRsa = require("jwks-rsa");
 // Set up Auth0 configuration
 const authConfig = {
     domain: "eventhorizon.auth0.com",
-    audience: "YOUR_API_IDENTIFIER"
+    audience: "https://event-horizon-app.herokuapp.com/"
   };
 
 // Define middleware that validates incoming bearer tokens
