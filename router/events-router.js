@@ -15,12 +15,24 @@ router.get("/", (req, res) => {
 		});
 });
 
+// Get all event-users
+router.get("/event-users", (req, res) => {
+	db.findEventUsers()
+		.then(events => {
+			res.status(200).json(events);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json({ message: "Doh!" });
+		});
+});
+
 // Create new event
 router.post("/", (req, res) => {
 	const eventObj = req.body;
 	db.add(eventObj)
 		.then(event => {
-			console.log(event);
+			console.log("Create router res: ", event);
 			res.status(200).json(event);
 		})
 		.catch(err => {
