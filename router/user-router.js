@@ -46,8 +46,8 @@ router.delete("/:id", (req, res) => {
 
 	db.deleteUser(userId)
 		.then(resp => {
-			// resp = 1 = user deleted
 			if (resp) {
+				// resp = 1 = user deleted
 				res.status(200).json({ message: "user deleted" });
 			} else {
 				// resp = 0 = no user found
