@@ -1,0 +1,46 @@
+Endpoints
+
+TABLES
+users
+events
+event_users
+event_availabilities
+user_friends
+
+
+================================
+
+POST users
+-to create new user with Auth0 email address
+
+PUT users
+-to add username to user record
+
+GET events
+-to get user events
+
+POST events
+-to create event
+
+PUT events
+-to update invite URL
+
+POST event_users
+-to join an event
+-to invite someone
+
+DELETE event_users
+-to uninvite someone
+
+GET event_availabilities
+-to get availability
+
+POST event_availabilities
+-to add availability
+
+PUT event_availabilities
+-to change availability (build out UI for this)
+
+DELETE event_availabilities
+-to delete availability
+
