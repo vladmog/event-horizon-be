@@ -6,6 +6,7 @@ const db = require("./user-model.js");
 router.get("/get_users", (req, res) => {
 	db.find()
 		.then(users => {
+			console.log(users);
 			res.status(200).json(users);
 		})
 		.catch(err => {
