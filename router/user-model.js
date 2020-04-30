@@ -12,7 +12,7 @@ function find() {
 	return db("users");
 }
 
-function findEventsByUserId(userId) {
+function findUserEvents(userId) {
 	return db("event_users as eu")
 		.where({ userId: userId })
 		.join("events as e", "eu.eventId", "e.id")
@@ -36,7 +36,7 @@ function findByEmail(emailAddress) {
 				return false;
 			}
 			user = user[0];
-			return findEventsByUserId(user.id).then(events => {
+			return findUserEvents(user.id).then(events => {
 				return {
 					user: user,
 					events: events,
