@@ -29,8 +29,8 @@ router.get("/event-users", (req, res) => {
 
 // Create new event
 router.post("/", (req, res) => {
-	const eventObj = req.body;
-	db.add(eventObj)
+	const eventAndUser = req.body;
+	db.add(eventAndUser)
 		.then(event => {
 			console.log("Create router res: ", event);
 			res.status(200).json(event);

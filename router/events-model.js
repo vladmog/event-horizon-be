@@ -21,16 +21,17 @@ function findEventById(eventId) {
 
 // function findEventsByUserId
 
-function add(event) {
-	const { name, inviteUrl, userId, userName } = event;
+function add(eventAndUser) {
+	const { event, user } = eventAndUser;
+
 	// Insert incoming event to "events" table
 	return db("events")
-		.insert({ name, inviteUrl })
+		.insert(event)
 		.then(eventId => {
 			eventId = eventId[0];
 			// Insert userId and new eventId into "event_users" table
 			return db("event_users")
-				.insert({ eventId, userId, isAdmin: true })
+				.insert({ eventId, userId: user.id, isAdmin: true })
 				.then(event_user_id => {
 					event_user_id = event_user_id[0];
 					return findEventById(eventId).then(event => {
