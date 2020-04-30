@@ -26,7 +26,10 @@ const checkJwt = jwt({
 
 const UserRouter = require("./router/user-router.js");
 router.use("/user", checkJwt, UserRouter);
+router.use("/dev_user", UserRouter);
 
-router.use("/dev", UserRouter);
+const EventsRouter = require("./router/events-router.js");
+router.use("/events", checkJwt, EventsRouter);
+router.use("/dev_events", EventsRouter);
 
 module.exports = router;
