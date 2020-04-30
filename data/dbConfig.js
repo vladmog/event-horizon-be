@@ -1,9 +1,13 @@
-// const knex = require("knex")({ client: "sqlite" });
+// const knex = require("knex");
+// const knexConfig = require("../knexfile.js");
+// console.log("knexConfig.development", knexConfig.development);
 
-// module.exports = knex;
+// module.exports = knex(knexConfig.development);
+
+require("dotenv").config();
 
 const knex = require("knex");
-const knexConfig = require("../knexfile.js");
-console.log("knexConfig.development", knexConfig.development);
+const environment = process.env.DB_CONNECT || "development";
+const config = require("../knexfile");
 
-module.exports = knex(knexConfig.development);
+module.exports = knex(config[environment]);
