@@ -37,10 +37,29 @@ router.post("/create_user", (req, res) => {
 			res.status(200).json(user);
 		})
 		.catch(err => {
+			console.log(err);
 			res.status(500).json(err);
 		});
 });
 
+router.delete("/", (req, res) => {
+	const userId = req.params.id;
+
+	db.deleteAllUsers(userId)
+		.then(resp => {
+			if (resp) {
+				// resp = 1 = user deleted
+				res.status(200).json({ message: "users deleted" });
+			} else {
+				// resp = 0 = no user found
+				res.status(404).json({ message: "user not found" });
+			}
+		})
+		.catch(err => {
+			console.log("err", err);
+			res.status(500).json(err);
+		});
+});
 router.delete("/:id", (req, res) => {
 	const userId = req.params.id;
 

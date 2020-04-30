@@ -12,6 +12,13 @@ exports.up = function (knex) {
 			tbl.string("startDate", 255);
 			tbl.string("endDate", 255);
 			tbl.string("time", 255);
+			tbl.integer("adminId")
+				.unsigned()
+				.notNullable()
+				.references("id")
+				.inTable("users")
+				.onDelete("CASCADE")
+				.onUpdate("CASCADE");
 		})
 		.createTable("event_users", tbl => {
 			tbl.increments();
@@ -20,14 +27,14 @@ exports.up = function (knex) {
 				.notNullable()
 				.references("id")
 				.inTable("events")
-				.onDelete("RESTRICT")
+				.onDelete("CASCADE")
 				.onUpdate("CASCADE");
 			tbl.integer("userId")
 				.unsigned()
 				.notNullable()
 				.references("id")
 				.inTable("users")
-				.onDelete("RESTRICT")
+				.onDelete("CASCADE")
 				.onUpdate("CASCADE");
 			tbl.bool("isAdmin").defaultTo(false).notNullable();
 		})

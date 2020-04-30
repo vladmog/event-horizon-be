@@ -23,6 +23,7 @@ function findEventById(eventId) {
 
 function add(eventAndUser) {
 	const { event, user } = eventAndUser;
+	console.log("event: ", event);
 
 	// Insert incoming event to "events" table
 	return db("events")
