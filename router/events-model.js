@@ -19,7 +19,21 @@ function findEventById(eventId) {
 	return db("events").where({ id: eventId });
 }
 
-// function findEventsByUserId
+function findUserEvents(userId) {
+	return db("event_users as eu")
+		.where({ userId: userId })
+		.join("events as e", "eu.eventId", "e.id")
+		.select(
+			"e.id",
+			"eu.isAdmin",
+			"e.name",
+			"e.eventHash",
+			"e.startDate",
+			"e.endDate",
+			"e.time",
+			"e.adminId"
+		);
+}
 
 function add(eventAndUser) {
 	const { event, user } = eventAndUser;
@@ -35,8 +49,8 @@ function add(eventAndUser) {
 				.insert({ eventId, userId: user.id, isAdmin: true })
 				.then(event_user_id => {
 					event_user_id = event_user_id[0];
-					return findEventById(eventId).then(event => {
-						return event;
+					return findUserEvents(user.id).then(events => {
+						return events;
 					});
 				});
 		});

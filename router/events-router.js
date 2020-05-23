@@ -31,9 +31,9 @@ router.get("/event-users", (req, res) => {
 router.post("/", (req, res) => {
 	const eventAndUser = req.body;
 	db.add(eventAndUser)
-		.then(event => {
-			console.log("Create router res: ", event);
-			res.status(200).json(event);
+		.then(events => {
+			console.log("Create router res: ", events);
+			res.status(200).json(events);
 		})
 		.catch(err => {
 			console.log(err);
