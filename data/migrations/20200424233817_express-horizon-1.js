@@ -8,7 +8,7 @@ exports.up = function (knex) {
 		.createTable("events", tbl => {
 			tbl.increments();
 			tbl.string("name", 255).notNullable();
-			tbl.string("inviteUrl", 255).notNullable();
+			tbl.string("eventHash", 255).notNullable();
 			tbl.string("startDate", 255);
 			tbl.string("endDate", 255);
 			tbl.string("time", 255);

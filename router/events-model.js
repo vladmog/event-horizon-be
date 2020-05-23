@@ -48,7 +48,7 @@ function remove(eventId) {
 
 // events
 //   x name;
-//   x inviteUrl;
+//   x eventHash;
 //     date;      NULLABLE
 //     time;      NULLABLE
 

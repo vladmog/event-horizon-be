@@ -20,7 +20,7 @@ function findUserEvents(userId) {
 			"e.id",
 			"eu.isAdmin",
 			"e.name",
-			"e.inviteUrl",
+			"e.eventHash",
 			"e.startDate",
 			"e.endDate",
 			"e.time",
