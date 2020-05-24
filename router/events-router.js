@@ -41,6 +41,20 @@ router.post("/", (req, res) => {
 		});
 });
 
+// Join an event
+router.post("/join", (req, res) => {
+	const userIdAndHash = req.body;
+	db.join(userIdAndHash)
+		.then(events => {
+			console.log("Join router res: ", events);
+			res.status(200).json(events);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json(err);
+		});
+});
+
 router.delete("/:id", (req, res) => {
 	const eventId = req.params.id;
 	db.remove(eventId)

@@ -5,6 +5,7 @@ module.exports = {
 	findEventUsers,
 	add,
 	remove,
+	join,
 };
 
 function find() {
@@ -50,6 +51,27 @@ function add(eventAndUser) {
 				.then(event_user_id => {
 					event_user_id = event_user_id[0];
 					return findUserEvents(user.id).then(events => {
+						return events;
+					});
+				});
+		});
+}
+
+function join(userIdAndHash) {
+	const { userId, eventHash } = userIdAndHash;
+	// Locate event with corresponding hash
+	return db("events")
+		.where({ eventHash: eventHash })
+		.then(event => {
+			event = event[0];
+			console.log("in join event: ", event);
+			// Add user as participant of event
+			return db("event_users")
+				.insert({ eventId: event.id, userId, isAdmin: false })
+				.then(event_user_id => {
+					event_user_id = event_user_id[0];
+					// Return all user events
+					return findUserEvents(userId).then(events => {
 						return events;
 					});
 				});
