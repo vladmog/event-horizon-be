@@ -80,4 +80,18 @@ router.delete("/:id", (req, res) => {
 		});
 });
 
+router.get("/test/:id", (req, res) => {
+	const userId = req.params.id;
+
+	db.findUsersMet(userId)
+		.then(resp => {
+			console.log(resp);
+			res.status(200).json(resp);
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500).json(err);
+		});
+});
+
 module.exports = router;

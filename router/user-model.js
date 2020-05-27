@@ -6,6 +6,7 @@ module.exports = {
 	createUser,
 	deleteUser,
 	deleteAllUsers,
+	findUsersMet,
 };
 
 function find() {
@@ -26,6 +27,27 @@ function findUserEvents(userId) {
 			"e.time",
 			"e.adminId"
 		);
+}
+
+async function findUsersMet(userId) {
+	// Obtain eventIds user has been part of
+	let eventIds = await db("event_users as eu")
+		.where({ userId: userId })
+		.select("eu.eventId");
+
+	// Format SQL response into array of raw eventIds
+	// [{eventId: 1}, {eventId: 2}] => [1,2]
+	eventIds = eventIds.map(obj => {
+		return obj.eventId;
+	});
+
+	// Find all users that given user has attended events with
+	let usersMet = await db("event_users as eu")
+		.join("users as u", "eu.userId", "u.id")
+		.whereIn("eu.eventId", eventIds)
+		.select("u.id", "u.userName", "eu.id", "eu.eventId", "eu.isAdmin");
+
+	return usersMet;
 }
 
 function findByEmail(emailAddress) {
