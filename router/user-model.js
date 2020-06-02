@@ -44,8 +44,16 @@ async function findUsersMet(userId) {
 	let usersMet = await db("event_users as eu")
 		.join("users as u", "eu.userId", "u.id")
 		.whereIn("eu.eventId", eventIds)
-		.whereNot("eu.userId", userId)
-		.select("u.id", "u.userName", "eu.id", "eu.eventId", "eu.isAdmin");
+		// .whereNot("eu.userId", userId)
+		.select(
+			"u.id",
+			"u.userName",
+			"u.emailAddress",
+			"eu.id",
+			"eu.eventId",
+			"eu.isAdmin",
+			"eu.userId"
+		);
 
 	return usersMet;
 }
