@@ -94,7 +94,7 @@ router.get("/cal", (req, res) => {
 
 	// console.log(years)
 
-	res.status(200).json(years);
+	res.status(200).json(yearIndexes);
 });
 
 router.post("/create_user", (req, res) => {
