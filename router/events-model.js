@@ -6,6 +6,8 @@ module.exports = {
 	add,
 	remove,
 	join,
+	getAvailabilities,
+	addAvailabilities,
 };
 
 function find() {
@@ -80,6 +82,20 @@ function join(userIdAndHash) {
 
 function remove(eventId) {
 	return db("events").where({ id: eventId }).delete();
+}
+
+async function getAvailabilities(eventId) {
+	let eventAvailabilities = await db("event_availabilities").where({
+		eventId: eventId,
+	});
+
+	return eventAvailabilities;
+}
+
+async function addAvailabilities(availabilities) {
+	let res = await db("event_availabilities").insert(availabilities);
+
+	return res;
 }
 
 // events
