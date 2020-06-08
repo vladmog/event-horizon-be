@@ -1,4 +1,5 @@
 const db = require("../data/dbConfig.js");
+const um = require("./user-model.js");
 
 module.exports = {
 	find,
@@ -6,6 +7,8 @@ module.exports = {
 	add,
 	remove,
 	join,
+	getAvailabilities,
+	addAvailabilities,
 };
 
 function find() {
@@ -80,6 +83,39 @@ function join(userIdAndHash) {
 
 function remove(eventId) {
 	return db("events").where({ id: eventId }).delete();
+}
+
+async function findEventUsers(eventId) {
+	let eventUsers = await db("event_users as eu")
+		.where({ eventId: eventId })
+		.join("users as u", "eu.userId", "u.id")
+		.select(
+			"u.id",
+			"u.userName",
+			"u.emailAddress",
+			"eu.id",
+			"eu.eventId",
+			"eu.isAdmin",
+			"eu.userId"
+		);
+	return eventUsers;
+}
+
+async function getAvailabilities(eventId) {
+	let eventAvailabilities = await db("event_availabilities").where({
+		eventId: eventId,
+	});
+
+	let eventUsers = await findEventUsers(eventId);
+
+	return { eventAvailabilities, eventUsers };
+	// return eventAvailabilities;
+}
+
+async function addAvailabilities(availabilities) {
+	let res = await db("event_availabilities").insert(availabilities);
+
+	return res;
 }
 
 // events
