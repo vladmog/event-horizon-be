@@ -55,6 +55,7 @@ router.post("/join", (req, res) => {
 		});
 });
 
+// REMOVE EVENT
 router.delete("/:id", (req, res) => {
 	const eventId = req.params.id;
 	db.remove(eventId)
@@ -73,32 +74,32 @@ router.delete("/:id", (req, res) => {
 		});
 });
 
+// GET EVENT AVAILABILITIES
 router.get("/availabilities/:id", (req, res) => {
 	const eventId = req.params.id;
 	db.getAvailabilities(eventId)
 		.then(resp => {
-			console.log("resp", resp);
 			res.status(200).json(resp);
 		})
 		.catch(err => {
-			console.log("err", err);
 			res.status(500).json(err);
 		});
 });
 
-router.put("/availabilities/:id", (req, res) => {
+// UPDATE AVAILABILITIES OF GIVEN EVENT ID ACCORDING TO ADD ARRAY AND REMOVE ARRAY
+router.put("/availabilities/:id", async (req, res) => {
 	const eventId = req.params.id;
 	const { add, remove } = req.body;
-	console.log("put");
-	db.addAvailabilities(add)
-		.then(resp => {
-			console.log("resp", resp);
-			res.status(200).json(resp);
-		})
-		.catch(err => {
-			console.log("err", err);
-			res.status(500).json(err);
-		});
+
+	try {
+		await db.removeAvailabilities(remove);
+		await db.addAvailabilities(add);
+		let resp = await db.getAvailabilities(eventId);
+		res.status(200).json(resp);
+	} catch (err) {
+		console.log("router err: ", err);
+		res.status(500).json(err);
+	}
 });
 
 module.exports = router;
