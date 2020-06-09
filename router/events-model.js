@@ -9,6 +9,8 @@ module.exports = {
 	join,
 	getAvailabilities,
 	addAvailabilities,
+	removeAvailability,
+	removeAvailabilities,
 };
 
 function find() {
@@ -117,6 +119,53 @@ async function addAvailabilities(availabilities) {
 
 	return res;
 }
+
+async function removeAvailability(availability) {
+	try {
+		let res = await db("event_availabilities as ea")
+			.where({ availabilityStart: availability.availabilityStart })
+			.where({ eventId: availability.eventId })
+			.where({ userId: availability.userId })
+			.del();
+		return res;
+	} catch (err) {
+		console.log(err);
+		return err;
+	}
+}
+
+async function removeAvailabilities(remove) {
+	// remove = [{},{},{}]
+	// {
+	// 	availabilityStart
+	// 	durationMinutes
+	// 	eventId
+	// 	userId
+	// }
+	remove.forEach(availability => {
+		removeAvailability(availability);
+	});
+
+	return true; // placeholder
+	await db("event_availabilities ea").whereIn();
+}
+
+// DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
+
+// // Find all users that given user has attended events with        R E F E R E N C E   O N L Y
+// let usersMet = await db("event_users as eu")
+// .join("users as u", "eu.userId", "u.id")
+// .whereIn("eu.eventId", eventIds)
+// // .whereNot("eu.userId", userId)
+// .select(
+// 	"u.id",
+// 	"u.userName",
+// 	"u.emailAddress",
+// 	"eu.id",
+// 	"eu.eventId",
+// 	"eu.isAdmin",
+// 	"eu.userId"
+// );
 
 // events
 //   x name;
