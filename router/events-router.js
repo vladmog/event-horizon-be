@@ -90,12 +90,11 @@ router.get("/availabilities/:id", (req, res) => {
 router.put("/availabilities/:id", async (req, res) => {
 	const eventId = req.params.id;
 	const { add, remove } = req.body;
-	console.log("remove: ", remove);
 
 	try {
 		let added = await db.addAvailabilities(add);
 	} catch (err) {
-		console.log("add router err: ", err);
+		console.log("add router err: ", err); // <<causing a sqlite misuse error
 	}
 
 	try {

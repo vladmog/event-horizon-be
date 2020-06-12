@@ -126,143 +126,6 @@ async function addAvailabilities(availabilities) {
 	return res;
 }
 
-// EXPERIMENTING WITH THE DELETE ROUTE TO SOLVE SQL MISUSE ERROR... UNCOMMENT FOLLOWING BLOCK FOR ORIGINAL ERROR CAUSING YET FUNCTIONAL DB QUERIES
-
-// async function removeAvailability(availability) {
-// 	try {
-// 		console.log("removeAvailability: ", availability);
-// 		let res = await db("event_availabilities as ea")
-// 			.where({ availabilityStart: availability.availabilityStart })
-// 			.andWhere({ eventId: availability.eventId })
-// 			.andWhere({ userId: availability.userId })
-// 			// .del()
-// 			.then(res => {
-// 				console.log("del res", res);
-// 				return res;
-// 			});
-// 	} catch (err) {
-// 		console.log(err);
-// 		return err;
-// 	}
-// }
-
-// async function removeAvailabilities(remove) {
-// 	// remove = [{},{},{}]
-// 	// {
-// 	// 	availabilityStart
-// 	// 	durationMinutes
-// 	// 	eventId
-// 	// 	userId
-// 	// }
-// 	let deleted = remove.map(async availability => {
-// 		return await removeAvailability(availability);
-// 	});
-
-// 	Promise.all(deleted)
-// 		.then(values => {
-// 			console.log("values", values);
-// 			return values;
-// 		})
-// 		.catch(err => {
-// 			console.log("err", err);
-// 			return err;
-// 		});
-
-// 	// return true; // placeholder
-// 	// await db("event_availabilities ea").whereIn();
-// }
-
-// DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
-
-// // Find all users that given user has attended events with        R E F E R E N C E   O N L Y
-// let usersMet = await db("event_users as eu")
-// .join("users as u", "eu.userId", "u.id")
-// .whereIn("eu.eventId", eventIds)
-// // .whereNot("eu.userId", userId)
-// .select(
-// 	"u.id",
-// 	"u.userName",
-// 	"u.emailAddress",
-// 	"eu.id",
-// 	"eu.eventId",
-// 	"eu.isAdmin",
-// 	"eu.userId"
-// );
-
-// events
-//   x name;
-//   x eventHash;
-//     date;      NULLABLE
-//     time;      NULLABLE
-
-// event_users
-//     eventId;
-//     userId;
-//     isAdmin;
-
-// EXPERIMENTING WITH THE DELETE ROUTE TO SOLVE SQL MISUSE ERROR
-
-async function removeAvailability(availability) {
-	try {
-		console.log("removeAvailability: ", availability);
-		let res = await db("event_availabilities as ea")
-			.where({ availabilityStart: availability.availabilityStart })
-			.andWhere({ eventId: availability.eventId })
-			.andWhere({ userId: availability.userId })
-			// .del()
-			.then(res => {
-				console.log("del res", res);
-				return res;
-			});
-	} catch (err) {
-		console.log(err);
-		return err;
-	}
-}
-
-async function removeAvailabilities(arr) {
-	if (!arr.length) {
-		return 0;
-	}
-	try {
-		let toDelete = arr.map(avail => {
-			const { eventId, userId, availabilityStart } = avail;
-			let res = db("event_availabilities")
-				.where({ eventId: eventId })
-				.andWhere({ userId: userId })
-				.andWhere({ availabilityStart: availabilityStart })
-				.del();
-			return res;
-		});
-		Promise.all(toDelete)
-			.then(resp => {
-				console.log("Promise.all resp: \n", resp);
-				return resp;
-			})
-			.catch(err => {
-				console.log(err);
-				return err;
-			});
-	} catch (err) {
-		console.log(err);
-		return err;
-	}
-}
-
-async function getAvailability(id) {
-	try {
-		let avail = await db("event_availabilities").where({ id: id }).first();
-		return avail;
-	} catch (err) {
-		console.log(err);
-		return err;
-	}
-}
-
-// async function getAvailability(eventId, userId, dateString){
-
-// }
-
 async function addAvailability(availability) {
 	// insert availability and return created record
 	try {
@@ -278,15 +141,15 @@ async function addAvailability(availability) {
 	}
 }
 
-// async function deleteAvailability(id) {
-// 	try {
-// 		let res = db("event_availabilities").where({ id: id }).del();
-// 		return res;
-// 	} catch (err) {
-// 		console.log(err);
-// 		return err;
-// 	}
-// }
+async function getAvailability(id) {
+	try {
+		let avail = await db("event_availabilities").where({ id: id }).first();
+		return avail;
+	} catch (err) {
+		console.log(err);
+		return err;
+	}
+}
 
 async function deleteAvailability(eventId, userId, availabilityStart) {
 	try {
@@ -330,3 +193,47 @@ async function deleteAvailabilities(arr) {
 		return err;
 	}
 }
+
+// DELETE FROM table WHERE id IN (SELECT id FROM somewhere_else)
+
+// // Find all users that given user has attended events with        R E F E R E N C E   O N L Y
+// let usersMet = await db("event_users as eu")
+// .join("users as u", "eu.userId", "u.id")
+// .whereIn("eu.eventId", eventIds)
+// // .whereNot("eu.userId", userId)
+// .select(
+// 	"u.id",
+// 	"u.userName",
+// 	"u.emailAddress",
+// 	"eu.id",
+// 	"eu.eventId",
+// 	"eu.isAdmin",
+// 	"eu.userId"
+// );
+
+// events
+//   x name;
+//   x eventHash;
+//     date;      NULLABLE
+//     time;      NULLABLE
+
+// event_users
+//     eventId;
+//     userId;
+//     isAdmin;
+
+// EXPERIMENTING WITH THE DELETE ROUTE TO SOLVE SQL MISUSE ERROR
+
+// async function getAvailability(eventId, userId, dateString){
+
+// }
+
+// async function deleteAvailability(id) {
+// 	try {
+// 		let res = db("event_availabilities").where({ id: id }).del();
+// 		return res;
+// 	} catch (err) {
+// 		console.log(err);
+// 		return err;
+// 	}
+// }
