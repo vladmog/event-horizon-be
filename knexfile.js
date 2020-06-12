@@ -1,5 +1,4 @@
 // Update with your config settings.
-import haha from "./data/migrations";
 module.exports = {
 	development: {
 		client: "sqlite",
