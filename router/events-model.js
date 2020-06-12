@@ -9,8 +9,6 @@ module.exports = {
 	join,
 	getAvailabilities,
 	addAvailabilities,
-	removeAvailability,
-	removeAvailabilities,
 
 	//tests
 	getAvailability,
