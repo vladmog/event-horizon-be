@@ -30,6 +30,7 @@ router.get("/event-users", (req, res) => {
 // Create new event
 router.post("/", (req, res) => {
 	const eventAndUser = req.body;
+	console.log("eventAndUser", eventAndUser);
 	db.add(eventAndUser)
 		.then(events => {
 			console.log("Create router res: ", events);

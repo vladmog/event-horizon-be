@@ -51,14 +51,16 @@ function add(eventAndUser) {
 
 	// Insert incoming event to "events" table
 	return db("events")
+		.returning(["id"])
 		.insert(event)
 		.then(eventId => {
-			eventId = eventId[0];
+			eventId = eventId[0].id;
 			// Insert userId and new eventId into "event_users" table
 			return db("event_users")
+				.returning(["id"])
 				.insert({ eventId, userId: user.id, isAdmin: true })
 				.then(event_user_id => {
-					event_user_id = event_user_id[0];
+					event_user_id = event_user_id[0].id;
 					return findUserEvents(user.id).then(events => {
 						return events;
 					});
@@ -76,9 +78,10 @@ function join(userIdAndHash) {
 			console.log("in join event: ", event);
 			// Add user as participant of event
 			return db("event_users")
+				.returning(["id"])
 				.insert({ eventId: event.id, userId, isAdmin: false })
 				.then(event_user_id => {
-					event_user_id = event_user_id[0];
+					event_user_id = event_user_id[0].id;
 					// Return all user events
 					return findUserEvents(userId).then(events => {
 						return events;
@@ -127,10 +130,10 @@ async function addAvailabilities(availabilities) {
 async function addAvailability(availability) {
 	// insert availability and return created record
 	try {
-		let newIdInArray = await db("event_availabilities").insert(
-			availability
-		);
-		let newId = newIdInArray[0];
+		let newIdInArray = await db("event_availabilities")
+			.returning(["id"])
+			.insert(availability);
+		let newId = newIdInArray[0].id;
 		let newAvail = await getAvailability(newId);
 		return newAvail;
 	} catch (err) {
