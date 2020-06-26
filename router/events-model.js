@@ -45,6 +45,7 @@ function findUserEvents(userId) {
 		);
 }
 
+// for admin event creation
 function add(eventAndUser) {
 	const { event, user } = eventAndUser;
 	console.log("event: ", event);
@@ -68,6 +69,7 @@ function add(eventAndUser) {
 		});
 }
 
+// to join an event via invite link
 function join(userIdAndHash) {
 	const { userId, eventHash } = userIdAndHash;
 	// Locate event with corresponding hash
@@ -90,8 +92,10 @@ function join(userIdAndHash) {
 		});
 }
 
+// deletes an event
 function remove(eventId) {
 	return db("events").where({ id: eventId }).delete();
+	// should also delete event availabilities and participants
 }
 
 async function findEventUsers(eventId) {

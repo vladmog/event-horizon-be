@@ -5,7 +5,7 @@ const cors = require("cors");
 
 let whitelist = [
     "http://localhost:3000", 
-    "https://master.d2mghrfmlzseon.amplifyapp.com"
+    'https://master.d2mghrfmlzseon.amplifyapp.com'
 ]
 
 server.use(cors({ origin: whitelist }));
