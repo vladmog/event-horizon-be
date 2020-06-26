@@ -56,6 +56,13 @@ router.post("/join", (req, res) => {
 		});
 });
 
+// manually add someone to an event
+router.post("/invite", (req, res) => {
+	const {userId, eventId} = req.body;
+	console.log("userId: ", userId, "eventId", eventId)
+	res.status(200).json({userId, eventId})
+})
+
 // REMOVE EVENT
 router.delete("/:id", (req, res) => {
 	const eventId = req.params.id;
