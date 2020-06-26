@@ -29,6 +29,23 @@ router.post("/get_user", (req, res) => {
 		});
 });
 
+router.post("/search_user", (req, res) => {
+	const { userName } = req.body;
+	db.findByUserName(userName)
+		.then((resp) => {
+			if (resp){
+				res.status(200).json(resp)
+			} else {
+				res.status(404).json({message: `Username ${userName} not found`})
+			}
+			
+		})
+		.catch((err) => {
+			console.log(err)
+			res.status(500).json(err)
+		})
+})
+
 
 router.post("/create_user", (req, res) => {
 	const userObj = req.body;

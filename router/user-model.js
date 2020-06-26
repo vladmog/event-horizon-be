@@ -7,6 +7,7 @@ module.exports = {
 	deleteUser,
 	deleteAllUsers,
 	findUsersMet,
+	findByUserName
 };
 
 function find() {
@@ -80,6 +81,19 @@ async function findByEmail(emailAddress) {
 		events: events,
 		usersMet: usersMet,
 	};
+}
+
+async function findByUserName(userName){
+	let user = await db("users").where({ userName: userName });
+
+	// Return false if user not found
+	if (!user.length) {
+		return false;
+	}
+	// Reformat [{user}] => {user}
+	user = user[0];
+
+	return user
 }
 
 // // PRE ASYNC
