@@ -57,10 +57,16 @@ router.post("/join", (req, res) => {
 });
 
 // manually add someone to an event
-router.post("/invite", (req, res) => {
-	const {userId, eventId} = req.body;
-	console.log("userId: ", userId, "eventId", eventId)
-	res.status(200).json({userId, eventId})
+router.post("/invite", async (req, res) => {
+	const {userId, eventId, adminId} = req.body;
+	console.log("userId: ", userId, "eventId", eventId, "adminId", adminId)
+	try{
+		let usersMet = await db.addUserToEvent(userId, eventId, adminId)
+		res.status(200).json({usersMet: usersMet})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json(err)
+	}
 })
 
 // REMOVE EVENT
