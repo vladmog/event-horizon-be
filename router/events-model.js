@@ -9,12 +9,14 @@ module.exports = {
 	join,
 	getAvailabilities,
 	addAvailabilities,
+	addUserToEvent,
 
 	//tests
 	getAvailability,
 	addAvailability,
 	deleteAvailability,
 	deleteAvailabilities,
+	
 };
 
 function find() {
@@ -90,6 +92,24 @@ function join(userIdAndHash) {
 					});
 				});
 		});
+}
+
+// for use in inviting users via invite button in invite page
+// adds user to db then returns admin's events
+async function addUserToEvent(userId, eventId, adminId) {
+	// check if user being invited is already part of the event
+	let check = await db("event_users")
+		.where({eventId: eventId, userId: userId})
+	if(check.length){
+		// if user already part of event, do nothing
+		return false
+	}
+	// otherwise add user to event and return admin users met
+	await db("event_users")
+		.returning(["id"])
+		.insert({eventId, userId, isAdmin: false})
+	let usersMet = await um.findUsersMet(adminId)
+	return usersMet
 }
 
 // deletes an event
