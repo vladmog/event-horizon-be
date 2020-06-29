@@ -10,6 +10,7 @@ module.exports = {
 	getAvailabilities,
 	addAvailabilities,
 	addUserToEvent,
+	removeUserFromEvent,
 
 	//tests
 	getAvailability,
@@ -108,6 +109,32 @@ async function addUserToEvent(userId, eventId, adminId) {
 	await db("event_users")
 		.returning(["id"])
 		.insert({eventId, userId, isAdmin: false})
+	let usersMet = await um.findUsersMet(adminId)
+	return usersMet
+}
+
+
+// for use in uninviting users via red x button in invite page
+// removes user from db then returns admin's events
+async function removeUserFromEvent(userId, eventId, adminId) {
+	// check if user being removed is part of the event
+	let check = await db("event_users")
+		.where({eventId: eventId, userId: userId})
+	if(!check.length){
+		// if user not part of event, do nothing
+		return false
+	}
+
+	// Delete user availabilities from the event
+	await db("event_availabilities")
+		.where({eventId: eventId, userId: userId})
+		.del()
+
+	// Delete user from event participants
+	await db("event_users")
+		.where({eventId: eventId, userId: userId})
+		.del()
+
 	let usersMet = await um.findUsersMet(adminId)
 	return usersMet
 }
