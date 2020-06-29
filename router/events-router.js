@@ -69,6 +69,20 @@ router.post("/invite", async (req, res) => {
 	}
 })
 
+
+// manually remove someone from an event
+router.post("/uninvite", async (req, res) => {
+	const {userId, eventId, adminId} = req.body;
+	console.log("userId: ", userId, "eventId", eventId, "adminId", adminId)
+	try{
+		let usersMet = await db.removeUserFromEvent(userId, eventId, adminId)
+		res.status(200).json({usersMet: usersMet})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json(err)
+	}
+})
+
 // REMOVE EVENT
 router.delete("/:id", (req, res) => {
 	const eventId = req.params.id;
