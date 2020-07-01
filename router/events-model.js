@@ -4,7 +4,10 @@ const um = require("./user-model.js");
 module.exports = {
 	find,
 	findEventUsers,
+	findUserEvents,
+	findEventById,
 	add,
+	update, 
 	remove,
 	join,
 	getAvailabilities,
@@ -70,6 +73,13 @@ function add(eventAndUser) {
 					});
 				});
 		});
+}
+
+async function update (eventId, updates) {
+	let updatedRows = await db("events")
+		.where({id: eventId})
+		.update(updates)
+	return updatedRows
 }
 
 // to join an event via invite link
