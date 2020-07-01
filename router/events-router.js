@@ -42,6 +42,24 @@ router.post("/", (req, res) => {
 		});
 });
 
+// Update an event
+router.put("/:eventId", async (req, res) => {
+	console.log("req.body: ", req.body)
+	const {updates, userId} = req.body;
+	const eventId = req.params.eventId;
+	console.log("updates", updates)
+	console.log("eventId", eventId)
+	try {
+		await db.update(eventId, updates)
+		let updatedEvents = await db.findUserEvents(userId)
+		res.status(200).json(updatedEvents) 
+	} catch (err) {
+		console.log(err)
+		res.status(500).json(err)
+	}
+});
+
+
 // Join an event
 router.post("/join", (req, res) => {
 	const userIdAndHash = req.body;
