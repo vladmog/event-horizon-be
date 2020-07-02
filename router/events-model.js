@@ -14,6 +14,7 @@ module.exports = {
 	addAvailabilities,
 	addUserToEvent,
 	removeUserFromEvent,
+	deleteEventAndArtifacts,
 
 	//tests
 	getAvailability,
@@ -69,7 +70,12 @@ function add(eventAndUser) {
 				.then(event_user_id => {
 					event_user_id = event_user_id[0].id;
 					return findUserEvents(user.id).then(events => {
-						return events;
+						return um.findUsersMet(user.id)
+							.then((usersMet) => {
+								return {
+									usersMet, events
+								}
+							})
 					});
 				});
 		});
@@ -146,13 +152,37 @@ async function removeUserFromEvent(userId, eventId, adminId) {
 		.del()
 
 	let usersMet = await um.findUsersMet(adminId)
-	return usersMet
+	let events = await findUserEvents(adminId)
+	return {usersMet, events}
 }
 
 // deletes an event
 function remove(eventId) {
 	return db("events").where({ id: eventId }).delete();
 	// should also delete event availabilities and participants
+}
+
+async function deleteEventAndArtifacts(eventId, adminId){
+	// event_availabilities
+	await db("event_availabilities")
+		.where({eventId: eventId})
+		.del()
+	// event_users
+	await db("event_users")
+		.where({eventId: eventId})
+		.del()
+	// events	
+	await db("events")
+		.where({id: eventId})
+		.del()
+	let usersMet = await um.findUsersMet(adminId)
+	let events = await findUserEvents(adminId)
+
+	return {
+		usersMet, 
+		events
+	}
+
 }
 
 async function findEventUsers(eventId) {
