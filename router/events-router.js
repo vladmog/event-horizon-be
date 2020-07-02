@@ -32,9 +32,9 @@ router.post("/", (req, res) => {
 	const eventAndUser = req.body;
 	console.log("eventAndUser", eventAndUser);
 	db.add(eventAndUser)
-		.then(events => {
-			console.log("Create router res: ", events);
-			res.status(200).json(events);
+		.then(resp => {
+			console.log("Create router res: ", resp);
+			res.status(200).json(resp);
 		})
 		.catch(err => {
 			console.log(err);
@@ -93,31 +93,30 @@ router.post("/uninvite", async (req, res) => {
 	const {userId, eventId, adminId} = req.body;
 	console.log("userId: ", userId, "eventId", eventId, "adminId", adminId)
 	try{
-		let usersMet = await db.removeUserFromEvent(userId, eventId, adminId)
-		res.status(200).json({usersMet: usersMet})
+		let resp = await db.removeUserFromEvent(userId, eventId, adminId)
+		res.status(200).json(resp)
 	} catch (err) {
 		console.log(err)
 		res.status(500).json(err)
 	}
 })
 
+
+
+
 // REMOVE EVENT
-router.delete("/:id", (req, res) => {
-	const eventId = req.params.id;
-	db.remove(eventId)
-		.then(resp => {
-			if (resp) {
-				// resp = 1 = event deleted
-				res.status(200).json({ message: "event deleted" });
-			} else {
-				// resp = 0 = no event found
-				res.status(404).json({ message: "event not found" });
-			}
-		})
-		.catch(() => {
-			console.log("err", err);
-			res.status(500).json(err);
-		});
+router.delete("/:eventId/:adminId", async (req, res) => {
+	const eventId = req.params.eventId;
+	const adminId = req.params.adminId;
+	try {
+		let resp = await db.deleteEventAndArtifacts(eventId, adminId)
+		console.log("master delete resp: ", resp)
+		res.status(200).json(resp)
+	} catch(err) {
+		console.log("err", err)
+		res.status(500).json(err)
+	}
+	// db.remove
 });
 
 // GET EVENT AVAILABILITIES
